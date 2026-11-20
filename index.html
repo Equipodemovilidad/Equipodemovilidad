@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Equipo de Movilidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fondo: #f3f4f6;
+    --superficie: #ffffff;
+    --azul: #1b3d78;
+    --azul-medio: #6aa6d4;
+    --azul-claro: #dcebf7;
+    --amarillo: #f2b705;
+    --texto: #2b3445;
+    --texto-suave: #5d6a7e;
+    --linea: #dfe3e9;
+    --error: #b3261e;
+    --sombra: 0 2px 10px rgba(27, 61, 120, .12);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  h1, h2, h3 { margin: 0; color: var(--azul); }
+  :focus-visible { outline: 3px solid var(--azul-medio); outline-offset: 3px; }
+
+  /* ---------- Pantalla de clave ---------- */
+  #acceso {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: var(--fondo);
+  }
+  .caja {
+    width: 100%;
+    max-width: 420px;
+    background: var(--superficie);
+    border-radius: 10px;
+    padding: 36px 32px 32px;
+    box-shadow: var(--sombra);
+  }
+  .caja h1 { font-size: 1.9rem; line-height: 1.15; font-weight: 700; }
+  .caja p { color: var(--texto-suave); margin: 10px 0 24px; }
+  label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--azul); }
+  input[type=password], input[type=text] {
+    width: 100%;
+    font: inherit;
+    padding: 12px 14px;
+    border: 1.5px solid var(--linea);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--texto);
+  }
+  input:focus { border-color: var(--azul); outline: 3px solid rgba(106,166,212,.4); }
+  .boton-principal {
+    margin-top: 16px;
+    width: 100%;
+    font: inherit;
+    font-weight: 600;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--azul);
+    color: #fff;
+    cursor: pointer;
+  }
+  .boton-principal:hover { background: #142e5b; }
+  .mensaje { min-height: 1.4em; margin: 12px 0 0; font-size: .95rem; color: var(--error); }
+
+  /* ---------- Portal ---------- */
+  #portal { display: none; }
+  .contenedor { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+
+  header.cabecera { position: relative; overflow: hidden; }
+  header.cabecera::after {
+    content: "";
+    position: absolute;
+    right: -40px; top: 20px;
+    width: 280px; height: 240px;
+    background: var(--azul-claro);
+    clip-path: polygon(0 100%, 100% 100%, 100% 0);
+    pointer-events: none;
+  }
+  header.cabecera::before {
+    content: "";
+    position: absolute;
+    right: 150px; top: 56px;
+    width: 120px; height: 120px;
+    background: var(--azul-medio);
+    clip-path: polygon(0 100%, 100% 100%, 100% 0);
+    opacity: .55;
+    pointer-events: none;
+  }
+  .cabecera .contenedor { position: relative; z-index: 1; padding-top: 56px; padding-bottom: 40px; }
+  .cabecera h1 { font-size: clamp(2rem, 5.5vw, 3.2rem); line-height: 1.1; font-weight: 800; }
+  .cabecera p { margin: 12px 0 0; max-width: 46ch; color: var(--texto-suave); font-size: 1.05rem; }
+
+  main { padding: 8px 0 56px; }
+  .lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+
+  .boton {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 26px;
+    min-height: 168px;
+    height: 100%;
+    padding: 22px 22px 20px;
+    text-decoration: none;
+    background: var(--superficie);
+    color: var(--azul);
+    border-radius: 10px;
+    box-shadow: var(--sombra);
+    border-bottom: 5px solid transparent;
+    transition: background .15s, color .15s, transform .15s, border-color .15s;
+  }
+  .boton:hover { background: var(--azul); color: #fff; border-bottom-color: var(--amarillo); transform: translateY(-3px); }
+  .boton:active { transform: translateY(0); }
+  .boton.pendiente { opacity: .55; cursor: not-allowed; }
+  .boton.pendiente:hover { background: var(--superficie); color: var(--azul); border-bottom-color: transparent; transform: none; }
+  .boton .insignia {
+    width: 46px; height: 46px;
+    display: grid; place-items: center;
+    background: var(--azul-claro);
+    color: var(--azul);
+    border-radius: 50%;
+    transition: background .15s, color .15s;
+  }
+  .boton:hover .insignia { background: rgba(255,255,255,.16); color: #fff; }
+  .boton .insignia svg { width: 24px; height: 24px; }
+  .boton .pie { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .boton .nombre { font-weight: 700; font-size: 1.15rem; line-height: 1.25; }
+  .boton .flecha { width: 22px; height: 22px; flex: none; }
+
+  footer { border-top: 1px solid var(--linea); padding: 20px 0 40px; color: var(--texto-suave); font-size: .95rem; }
+  .salir {
+    font: inherit; background: none; border: 0; padding: 0; color: var(--azul);
+    cursor: pointer; text-decoration: underline; font-weight: 600;
+  }
+
+  /* ---------- Generador de clave (solo en #generar) ---------- */
+  #generador { display: none; margin-top: 24px; padding-top: 20px; border-top: 1px dashed var(--linea); }
+  #generador code { display: block; margin-top: 10px; word-break: break-all; background: var(--fondo); padding: 10px; border-radius: 6px; font-size: .85rem; }
+
+  @media (max-width: 760px) { .lista { grid-template-columns: repeat(2, 1fr); } header.cabecera::after, header.cabecera::before { opacity: .5; } }
+  @media (max-width: 440px) { .lista { grid-template-columns: 1fr; } .boton { min-height: 120px; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- ===== PANTALLA DE CLAVE ===== -->
+<section id="acceso">
+  <div class="caja">
+    <h1>Equipo de Movilidad</h1>
+    <p>Ingresa la clave del equipo para continuar.</p>
+    <form id="formAcceso" autocomplete="off">
+      <label for="clave">Clave de acceso</label>
+      <input type="password" id="clave" required autofocus>
+      <button type="submit" class="boton-principal">Ingresar</button>
+      <p class="mensaje" id="mensaje" role="alert"></p>
+    </form>
+    <div id="generador">
+      <label for="nuevaClave">Generar código para una clave nueva</label>
+      <input type="text" id="nuevaClave" placeholder="Escribe la clave nueva">
+      <code id="resultadoHash">El código aparecerá aquí.</code>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PORTAL ===== -->
+<div id="portal">
+  <header class="cabecera">
+    <div class="contenedor">
+      <h1>Equipo de Movilidad</h1>
+      <p>Selecciona lo que necesitas. Se abrirá en una pestaña nueva.</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="contenedor">
+      <ul class="lista" id="lista"></ul>
+    </div>
+  </main>
+
+  <footer>
+    <div class="contenedor">
+      ¿Terminaste? <button class="salir" id="salir" type="button">Cerrar sesión</button>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* =====================================================
+   CONFIGURACIÓN: lo único que debes editar
+   ===================================================== */
+
+// Código (hash SHA-256) de la clave. La clave de ejemplo es: Movilidad2026
+// Para cambiarla: abre la página con  #generar  al final de la dirección.
+const HASH_CLAVE = '95791f4d2afcafe6a75c6dd18f7db8b461a474e7f5438559439812b60cb50836';
+
+// Los 6 botones: nombre y enlace
+const FORMULARIOS = [
+  { nombre: 'Registro de PMT',            url: 'https://docs.google.com/forms/d/e/1FAIpQLSfl23QaXzZv0-htZIWL7Bo0eqvwou0VUhEwgzOCdtBopDLuSA/viewform?usp=header' },
+  { nombre: 'Registro de prórroga',       url: 'https://docs.google.com/forms/d/e/1FAIpQLSfx0PJ9t8pcmOhJCJKUKTpBkL03aqDIFP_lodRVzyGsA_2yRw/viewform?usp=header' },
+  { nombre: 'Registro de visita técnica', url: 'https://docs.google.com/forms/d/e/1FAIpQLSd5BQ5m895VIqzM0fMr_olsDqw0Dm-vcpeKAtNHDq3UkQ_q1A/viewform?usp=header' },
+  { nombre: 'Registro de eventos',        url: 'https://docs.google.com/forms/d/e/1FAIpQLScJOSWiXsRR7NbOGMnq50HDoQzSe3JONhz0Rxc9xcSXJFXdSw/viewform?usp=header' },
+  { nombre: 'Resumen',                    url: 'https://docs.google.com/spreadsheets/d/1ZiFxf1oN2w0kD6vXPltZYRPKfhu4hJYVoQTqxSOulUs/edit?usp=drive_link' },
+  { nombre: 'Indicadores',                url: 'PEGA_AQUI_EL_ENLACE' },
+];
+
+/* =====================================================
+   LÓGICA (no necesitas tocar nada de aquí hacia abajo)
+   ===================================================== */
+const $ = id => document.getElementById(id);
+
+async function sha256(texto) {
+  const datos = new TextEncoder().encode(texto);
+  const buffer = await crypto.subtle.digest('SHA-256', datos);
+  return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function mostrarPortal() {
+  const lista = $('lista');
+  lista.innerHTML = '';
+  FORMULARIOS.forEach(f => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.className = 'boton';
+    if (f.url.includes('PEGA_AQUI')) {
+      a.classList.add('pendiente');
+      a.setAttribute('aria-disabled', 'true');
+    } else {
+      a.href = f.url;
+    }
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.innerHTML =
+      '<span class="insignia" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></span>' +
+      '<span class="pie"><span class="nombre"></span>' +
+      '<svg class="flecha" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>';
+    a.querySelector('.nombre').textContent = f.url.includes('PEGA_AQUI') ? f.nombre + ' (próximamente)' : f.nombre;
+    li.appendChild(a);
+    lista.appendChild(li);
+  });
+  $('acceso').style.display = 'none';
+  $('portal').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function mostrarAcceso() {
+  $('portal').style.display = 'none';
+  $('acceso').style.display = 'grid';
+  $('clave').value = '';
+  $('clave').focus();
+}
+
+$('formAcceso').addEventListener('submit', async e => {
+  e.preventDefault();
+  $('mensaje').textContent = '';
+  const hash = await sha256($('clave').value);
+  if (hash === HASH_CLAVE) {
+    try { sessionStorage.setItem('acceso', hash); } catch (_) {}
+    mostrarPortal();
+  } else {
+    $('mensaje').textContent = 'La clave no es correcta. Revísala e inténtalo de nuevo.';
+    $('clave').select();
+  }
+});
+
+$('salir').addEventListener('click', () => {
+  try { sessionStorage.removeItem('acceso'); } catch (_) {}
+  mostrarAcceso();
+});
+
+// Mantener la sesión mientras la pestaña siga abierta
+try {
+  if (sessionStorage.getItem('acceso') === HASH_CLAVE) mostrarPortal();
+} catch (_) {}
+
+// Generador de código para cambiar la clave (solo con #generar)
+if (location.hash === '#generar') {
+  $('generador').style.display = 'block';
+  $('nuevaClave').addEventListener('input', async e => {
+    $('resultadoHash').textContent = e.target.value
+      ? await sha256(e.target.value)
+      : 'El código aparecerá aquí.';
+  });
+}
+</script>
+</body>
+</html>
