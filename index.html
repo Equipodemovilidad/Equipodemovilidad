@@ -148,6 +148,24 @@
     cursor: pointer; text-decoration: underline; font-weight: 600;
   }
 
+  /* ---------- Botón de sugerencias ---------- */
+  .sugerencias {
+    position: absolute;
+    top: 16px; left: 24px;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    font-size: .8rem; font-weight: 600;
+    color: var(--azul);
+    background: var(--superficie);
+    border-radius: 999px;
+    border-bottom: 3px solid transparent;
+    box-shadow: var(--sombra);
+    text-decoration: none;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .sugerencias svg { width: 15px; height: 15px; flex: none; }
+  .sugerencias:hover { background: var(--azul); color: #fff; border-bottom-color: var(--amarillo); }
+
   /* ---------- Generador de clave (solo en #generar) ---------- */
   #generador { display: none; margin-top: 24px; padding-top: 20px; border-top: 1px dashed var(--linea); }
   #generador code { display: block; margin-top: 10px; word-break: break-all; background: var(--fondo); padding: 10px; border-radius: 6px; font-size: .85rem; }
@@ -182,6 +200,11 @@
 <div id="portal">
   <header class="cabecera">
     <div class="contenedor">
+      <a class="sugerencias" id="sugerencias" href="#" target="_blank" rel="noopener noreferrer"
+         title="Envía una sugerencia, petición, observación o comentario">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Sugerencias</span>
+      </a>
       <h1>Equipo de Movilidad</h1>
       <p>Selecciona lo que necesitas. Se abrirá en una pestaña nueva.</p>
     </div>
@@ -220,6 +243,9 @@ const FORMULARIOS = [
   { nombre: 'Indicadores',                url: 'PEGA_AQUI_EL_ENLACE' },
 ];
 
+// Formulario de sugerencias, peticiones, observaciones o comentarios
+const FORM_SUGERENCIAS = 'PEGA_AQUI_EL_ENLACE';
+
 /* =====================================================
    LÓGICA (no necesitas tocar nada de aquí hacia abajo)
    ===================================================== */
@@ -232,6 +258,8 @@ async function sha256(texto) {
 }
 
 function mostrarPortal() {
+  const sug = $('sugerencias');
+  if (FORM_SUGERENCIAS.includes('PEGA_AQUI')) sug.style.display = 'none'; else sug.href = FORM_SUGERENCIAS;
   const lista = $('lista');
   lista.innerHTML = '';
   FORMULARIOS.forEach(f => {
@@ -302,3 +330,4 @@ if (location.hash === '#generar') {
 </script>
 </body>
 </html>
+
